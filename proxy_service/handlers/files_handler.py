@@ -8,7 +8,7 @@ import tornado.web
 
 from boto.s3.key import Key
 
-CONN = boto.connect_s3()
+CONN = boto.connect_s3(is_secure=False)
 BUCKET = 'wcef-2018-dgdp'
 
 # def encode_bytes_to_base_64_str(data):
@@ -25,7 +25,7 @@ class FilesHandler(tornado.web.RequestHandler):
     def get(self):
         """
         USAGE: GET /files?sender=<sender public key>
-        Returns: 
+        Returns:
 
         {
           "files": [
@@ -34,17 +34,18 @@ class FilesHandler(tornado.web.RequestHandler):
           ]
         }
         """
-        sender = self.get_argument("sender")
+        sender_b64 = self.get_argument("sender")
+        print('getting files...')
 
         response = {
                 "files": []
                 }
 
         bucket = CONN.get_bucket(BUCKET)
-        bucket_keys = bucket.list(sender + "/", delimiter="/")
+        bucket_keys = bucket.list(sender_b64 + "/", delimiter="/")
         transformed_keys = set()
         for key in bucket_keys:
-            prefix_striped = key.name[(len(sender) + 1):]
+            prefix_striped = key.name[(len(sender_b64) + 1):]
             prefix_postfix_striped = prefix_striped[:prefix_striped.rfind("/")]
             transformed_keys.add(prefix_postfix_striped)
         response = {
