@@ -3,6 +3,8 @@ import tornado.web
 
 from handlers.nucypher_test_handler import NucypherTestHandler
 
+from handlers.s3_handler import S3Handler
+
 
 class HelloWorldHandler(tornado.web.RequestHandler):
     def get(self):
@@ -14,6 +16,7 @@ def make_app():
     return tornado.web.Application([
         (r"/hello_world", HelloWorldHandler),
         (r"/nucypher_test_handler", NucypherTestHandler),
+        (r"/s3_handler/([a-z_.]*)", S3Handler),
     ])
 
 if __name__ == "__main__":
