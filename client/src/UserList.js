@@ -18,15 +18,18 @@ import RaisedButton from 'material-ui/RaisedButton';
 function RecipientList({tableData}) {
   return (
     <Table multiSelectable={false}>
-      <TableHeader>
+      <TableHeader
+        displaySelectAll={false}
+        adjustForCheckbox={false}
+      >
         <TableRow>
           <TableRowColumn>Recipient Name</TableRowColumn>
           <TableRowColumn>Recipient Public Key</TableRowColumn>
-          <TableRowColumn></TableRowColumn>
-          <TableRowColumn></TableRowColumn>
+          <TableRowColumn className="grant-revoke"></TableRowColumn>
+          <TableRowColumn className="grant-revoke"></TableRowColumn>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody displayRowCheckbox={false}>
         {
           tableData.map((row, index) => (
             <TableRow key={index}>
