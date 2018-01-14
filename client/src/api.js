@@ -1,5 +1,5 @@
-const config = 'config';
 import axios from 'axios';
+const config = './config';
 
 const instance = axios.create({
   baseURL: config.base_url,

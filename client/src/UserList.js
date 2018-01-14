@@ -55,14 +55,22 @@ export class RecipientList extends Component {
                       receiver: config.bob.pk_b64,
                       name: config.bob.name,
                       filename: this.props.filename,
-                      rekey
+                      rekey: '',
+                      encryptedEphemeralKey: ''
                     })}
                     label="Grant"
                   />
                 </TableRowColumn>
-                <TableRowColumn>
-                  <RaisedButton onClick={this.handleRevoke} label="Revoke"/>
-                </TableRowColumn>
+                <RaisedButton
+                  onClick={this.handleRevoke({
+                    sender: config.alice.pk_b64,
+                    receiver: config.bob.pk_b64,
+                    filename: this.props.filename
+                  })}
+                  secondary={true}
+                  label="Revoke"
+                  style={{marginTop: 6}}
+                />
               </TableRow>
             ))
           }
@@ -77,38 +85,38 @@ export default class UserList extends Component {
     super(props);
     this.state = {
       selected_file_id: '',
-      recipients: {},
+      recipients: [],
       files: []
     };
   }
 
 
   componentDidMount() {
-    this.setState({
-      selected_file_id: '',
-
-      recipients: {
-        'file_1.pdf': [{
-          name: 'Bob',
-          public_key: config.bob.pk_b64
-        }],
-        'file_2.pdf': [
-          {
-            name: 'Bob',
-            public_key: config.bob.pk_b64
-          }]
-      }
+    return api.listFiles({
+      sender: config.alice.pk_b64
+    }).then(response => {
+      this.setState({
+        files: response.files
+      })
     });
   }
 
-  setPage(fileName) {
-    this.setState({
-      selected_file_id: fileName
-    });
+  setPage(filename) {
+    return () => {
+      return api.getAllShares({
+        filename,
+        sender: config.alice.pk_b64
+      })
+      .then(response => {
+        this.setState({
+          recipients: response
+        })
+      })
+    }
   }
 
   render() {
-    const recipients = _.get(this.state, 'recipients', {});
+    const files = _.get(this.state, 'files', {});
     const selected_file_id = _.get(this.state, 'selected_file_id', '');
 
     return (
@@ -116,9 +124,9 @@ export default class UserList extends Component {
         <div className="list">
           <List>
             {
-              _.keys(recipients).map(fileName => {
+              files.map(fileName => {
                 return (
-                  <ListItem key={fileName} onClick={() => this.setPage(fileName)} leftIcon={<Attachment />}>
+                  <ListItem key={fileName} onClick={this.setPage(fileName)} leftIcon={<Attachment />}>
                     {fileName}
                   </ListItem>
                 )
@@ -128,9 +136,9 @@ export default class UserList extends Component {
         </div>
         <div className="recipients">
           {
-            recipients[selected_file_id] ?
+            files.length > 0 ?
             <RecipientList
-              tableData={recipients[selected_file_id]}
+              tableData={files}
               fileName={selected_file_id}
             /> :
             null
