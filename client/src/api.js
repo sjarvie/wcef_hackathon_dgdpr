@@ -9,9 +9,6 @@ const instance = axios.create({
 
 export function listFiles(userId) {
   return instance.get(`/list_files/${userId}`)
-  .then(function (response) {
-    console.log(response);
-  })
   .catch(function (error) {
     console.log(error);
   });
