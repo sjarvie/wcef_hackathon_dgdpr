@@ -47,7 +47,7 @@ export class RecipientList extends Component {
             tableData.map((row, index) => (
               <TableRow key={index}>
                 <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.public_key}</TableRowColumn>
+                <TableRowColumn>{row.key}</TableRowColumn>
                 <TableRowColumn>
                   <RaisedButton
                     onClick={this.handleGrant({
@@ -85,7 +85,12 @@ export default class UserList extends Component {
     super(props);
     this.state = {
       selected_file_id: '',
-      shares: [],
+      shares: [
+        {
+          name: config.bob.name,
+          key: config.bob.pk_b64
+        }
+      ],
       files: []
     };
   }
@@ -110,7 +115,7 @@ export default class UserList extends Component {
       .then(response => {
         this.setState({
           selected_file_id: filename,
-          shares: _.get(response, 'data.shares')
+          // shares: _.get(response, 'data.shares')
         });
       });
     }
@@ -118,7 +123,7 @@ export default class UserList extends Component {
 
   render() {
     const files = _.get(this.state, 'files', []);
-    const shares = _.get(this.state, 'shares', []);
+    const shares = _.get(this.state, 'shares');
     const selected_file_id = _.get(this.state, 'selected_file_id', '');
 
     return (

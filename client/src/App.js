@@ -22,7 +22,6 @@ class App extends Component {
           title="dGDPR"
           iconElementRight={<Avatar label="alice">A</Avatar>}
         >
-          <Button label="Receiver" style={{left: 0}} onClick={() => this.setState({page: 'download'})}/>
         </AppBar>
         <div className="page">
           {
