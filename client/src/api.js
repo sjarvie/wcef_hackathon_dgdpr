@@ -7,9 +7,20 @@ const instance = axios.create({
   headers: {'Content-Type': 'application/json'}
 });
 
-export function listFiles(userId) {
-  return instance.get(`/list_files/${userId}`)
+export function getAllShares({sender}) {
+  return instance.get('/files', {params: { sender }})
   .catch(function (error) {
     console.log(error);
   });
 }
+
+export function getShare({sender, filename}) {
+  return instance.get('/shares', {
+    params: {
+      sender, filename
+    }})
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
