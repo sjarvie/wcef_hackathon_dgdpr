@@ -8,16 +8,16 @@ import tornado.web
 
 from boto.s3.key import Key
 
-CONN = boto.connect_s3()
+CONN = boto.connect_s3(is_secure=False)
 BUCKET = 'wcef-2018-dgdp'
 
-# def encode_bytes_to_base_64_str(data):
-#     encoded = base64.b64encode(data)
-#     return bytes.decode(encoded)
-# 
-# def decode_base64_str_into_bytes(s):
-#     encoded = str.encode(s)
-#     return base64.b64decode(encoded)
+def encode_bytes_to_base_64_str(data):
+    encoded = base64.b64encode(data)
+    return bytes.decode(encoded)
+
+def decode_base64_str_into_bytes(s):
+    encoded = str.encode(s)
+    return base64.b64decode(encoded)
 
 
 class UploadHandler(tornado.web.RequestHandler):
@@ -33,6 +33,7 @@ class UploadHandler(tornado.web.RequestHandler):
 
         """
         args = json.loads(self.request.body)
+        print('uploading file')
 
         # test an object can be created
         print('Got args {}'.format(args))
@@ -53,11 +54,16 @@ class UploadHandler(tornado.web.RequestHandler):
         upload_ciphertext.key = k_ciphertext
         upload_ciphertext.set_contents_from_string(c_b64)
 
+        print('uploaded cipher text to {}'.format(k_ciphertext))
+
         # upload edek
         # import pdb; pdb.set_trace()
         k_edek = '{}/edek'.format(k_base)
         upload_edek = Key(bucket)
         upload_edek.key = k_edek
         upload_edek.set_contents_from_string(edek_b64)
+        print('uploaded edek text to {}'.format(k_edek))
+
+
         self.write("OK")
 
