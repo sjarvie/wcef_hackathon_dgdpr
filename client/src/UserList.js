@@ -85,7 +85,7 @@ export default class UserList extends Component {
     super(props);
     this.state = {
       selected_file_id: '',
-      recipients: [],
+      shares: [],
       files: []
     };
   }
@@ -95,9 +95,6 @@ export default class UserList extends Component {
     return api.listFiles({
       sender: config.alice.pk_b64
     }).then(response => {
-      console.log('############');
-      console.log(response);
-      console.log('############');
       this.setState({
         files: _.get(response, 'data.files')
       });
@@ -112,7 +109,8 @@ export default class UserList extends Component {
       })
       .then(response => {
         this.setState({
-          recipients: response
+          selected_file_id: filename,
+          shares: _.get(response, 'data.shares')
         });
       });
     }
@@ -120,6 +118,7 @@ export default class UserList extends Component {
 
   render() {
     const files = _.get(this.state, 'files', []);
+    const shares = _.get(this.state, 'shares', []);
     const selected_file_id = _.get(this.state, 'selected_file_id', '');
 
     return (
@@ -141,7 +140,7 @@ export default class UserList extends Component {
           {
             selected_file_id ?
             <RecipientList
-              tableData={files}
+              tableData={shares}
               fileName={selected_file_id}
             /> :
             null
