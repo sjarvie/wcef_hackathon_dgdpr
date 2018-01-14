@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Upload from './Upload';
+import UserList from './UserList'
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+
+const routes = {
+  upload: <Upload />,
+  list: <UserList/>
+};
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      current_page: 'upload'
+    };
+  }
+
+  setPage(pageName) {
+    this.setState({
+      current_page: pageName
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">dGDPR</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="menu">
+          <Menu selectedMenuItemStyle={{backgroundColor: 'red'}}>
+            <MenuItem onClick={() => this.setPage('upload')} primaryText="Upload" />
+            <MenuItem onClick={() => this.setPage('list')} primaryText="My Files" />
+          </Menu>
+        </div>
+        <div className="page">
+          {routes[this.state.current_page]}
+        </div>
       </div>
     );
   }
