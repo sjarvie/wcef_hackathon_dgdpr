@@ -4,12 +4,14 @@
 
 .App-header {
   background-color: #222;
-  padding: 20px;
+  padding: 10px;
   color: white;
+  text-align: left;
 }
 
 .App-title {
   font-size: 1.5em;
+  text-align: left;
 }
 
 .App-intro {
@@ -30,6 +32,22 @@ ul {
   display: inline-block;
 }
 
+.list-page {
+  width: 100%;
+}
+
+.list {
+  width: 30%;
+}
 .list * {
   text-align: left;
+}
+
+.recipients {
+  width: 70%;
+  background-color: red;
+}
+
+.upload-page input {
+  display: none;
 }
