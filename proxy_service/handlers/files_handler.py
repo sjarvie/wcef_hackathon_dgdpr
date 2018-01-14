@@ -50,4 +50,4 @@ class FilesHandler(tornado.web.RequestHandler):
         response = {
                 "files": list(transformed_keys)
                 }
-        self.write(json.dumps(response))
+        self.write(response)

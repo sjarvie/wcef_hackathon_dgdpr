@@ -23,9 +23,9 @@ def make_app():
     return tornado.web.Application([
         # (r"/nucypher_test_handler", NucypherTestHandler),
         # (r"/s3_handler/([a-z_.]*)", S3Handler),
-        (r"/upload/", UploadHandler),
+        (r"/upload", UploadHandler),
         (r"/files", FilesHandler),
-        (r"/shares/", SharesHandler, dict(keys=keys))
+        (r"/shares", SharesHandler, dict(keys=keys))
     ])
 
 if __name__ == "__main__":

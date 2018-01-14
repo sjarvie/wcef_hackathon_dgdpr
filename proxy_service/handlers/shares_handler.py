@@ -42,7 +42,7 @@ class SharesHandler(tornado.web.RequestHandler):
                 })
 
         # test an object can be created
-        self.write(json.dumps(response))
+        self.write(response)
 
     def post(self):
         """
