@@ -16,8 +16,8 @@ pk_b_b64 = encode_bytes_to_base_64_str(pk_b) # 'AQJrHHtkyFEh+S0m3pP39khxZ024+W/R
  */
 
 module.exports = {
-  base_url: 'http://edwards-mbp:8000',
-
+  base_url: 'http://edwards-mbp:8888',
+  base_url_keygen: 'http://edwards-mbp:8889',
   alice: {
     name: 'Alice',
     sk_b64: 'AAqL68MxgQa7uJKlnU83x9HMmL1NNb0T2bmE6taOiUjg',

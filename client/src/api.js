@@ -1,14 +1,16 @@
 import axios from 'axios';
 const config = './config';
 
+const BASE_URL = 'http://edwards-mbp:8888';
+
 const instance = axios.create({
-  baseURL: config.base_url,
-  timeout: 1000,
+  baseURL: BASE_URL,
+  timeout: 10000,
   headers: {'Content-Type': 'application/json'}
 });
 
 export function listFiles({sender}) {
-  return instance.get('/files', { params: { sender }})
+  return instance.get(`/files`, { params: { sender }})
   .catch(function (error) {
     console.log(error);
   });
@@ -18,13 +20,15 @@ export function getAllShares({sender, filename}) {
   return instance.get('/shares', {
     params: {
       sender, filename
-    }})
+    }
+  })
   .catch(function (error) {
     console.log(error);
   });
 }
 
 export function grant({sender, receiver, name, filename, rekey, encryptedEphemeralKey}) {
+  // TODO: May need ot make rekey call here
   return instance.post('/shares', {
     sender, receiver, name, filename, rekey, encryptedEphemeralKey
   })
