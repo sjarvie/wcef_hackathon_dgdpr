@@ -43,7 +43,7 @@ class UploadHandler(tornado.web.RequestHandler):
         sender_b64 = args['sender']
 
         # format is /public_key/fname
-        k_base = '/{}/{}/ciphertext'.format(sender_b64, fname)
+        k_base = '/{}/{}'.format(sender_b64, fname)
         bucket = CONN.get_bucket(BUCKET)
 
         # upload ciphertext
@@ -57,7 +57,7 @@ class UploadHandler(tornado.web.RequestHandler):
         # import pdb; pdb.set_trace()
         k_edek = '{}/edek'.format(k_base)
         upload_edek = Key(bucket)
-        upload_edek.key = k_ciphertext
+        upload_edek.key = k_edek
         upload_edek.set_contents_from_string(edek_b64)
         self.write("OK")
 

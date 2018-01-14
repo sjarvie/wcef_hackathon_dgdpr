@@ -4,6 +4,7 @@ import tornado.web
 # from handlers.nucypher_test_handler import NucypherTestHandler
 from handlers.upload_handler import UploadHandler
 from handlers.shares_handler import SharesHandler
+from handlers.files_handler import FilesHandler
 
 keys = {
     "sender": {
@@ -23,6 +24,7 @@ def make_app():
         # (r"/nucypher_test_handler", NucypherTestHandler),
         # (r"/s3_handler/([a-z_.]*)", S3Handler),
         (r"/upload/", UploadHandler),
+        (r"/files", FilesHandler),
         (r"/shares/", SharesHandler, dict(keys=keys))
     ])
 
