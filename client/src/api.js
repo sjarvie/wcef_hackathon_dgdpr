@@ -7,14 +7,14 @@ const instance = axios.create({
   headers: {'Content-Type': 'application/json'}
 });
 
-export function getAllShares({sender}) {
-  return instance.get('/files', {params: { sender }})
+export function listFiles({sender}) {
+  return instance.get('/files', { params: { sender }})
   .catch(function (error) {
     console.log(error);
   });
 }
 
-export function getShare({sender, filename}) {
+export function getAllShares({sender, filename}) {
   return instance.get('/shares', {
     params: {
       sender, filename
@@ -24,3 +24,35 @@ export function getShare({sender, filename}) {
   });
 }
 
+export function grant({sender, receiver, name, filename, rekey, encryptedEphemeralKey}) {
+  return instance.post('/shares', {
+    sender, receiver, name, filename, rekey, encryptedEphemeralKey
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function revoke({sender, receiver, filename}) {
+  return instance.delete('/shares', {
+    params: {
+      sender, receiver, filename
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function upload({filename, cyphertext, edek, sender}) {
+  return instance.post('/upload/', {
+    filename, cyphertext, edek, sender
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function download({}) {
+
+}

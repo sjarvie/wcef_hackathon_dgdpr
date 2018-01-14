@@ -1,27 +1,30 @@
 import React, { Component } from "react";
 import {List, ListItem} from 'material-ui/List';
 import Attachment from 'material-ui/svg-icons/file/attachment';
-
-import keypair from 'keypair';
 import _ from 'lodash';
+import config from './config';
+import * as api from './api';
+
 import {
   Table,
   TableBody,
-  TableFooter,
   TableHeader,
-  TableHeaderColumn,
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 
 export class RecipientList extends Component {
-  handleGrant({sender, filename}) {
-    () => {}
+  handleGrant({sender, receiver, name, filename, rekey, encryptedEphemeralKey}) {
+    return () => {
+      return api.grant({sender, receiver, name, filename, rekey, encryptedEphemeralKey});
+    }
   }
 
-  handleRevoke({sender, filename}) {
-    () => {}
+  handleRevoke({sender, receiver, filename}) {
+    return () => {
+      return api.revoke({sender, receiver, filename});
+    }
   }
 
   render() {
@@ -45,8 +48,21 @@ export class RecipientList extends Component {
               <TableRow key={index}>
                 <TableRowColumn>{row.name}</TableRowColumn>
                 <TableRowColumn>{row.public_key}</TableRowColumn>
-                <TableRowColumn><RaisedButton onClick={this.handleGrant} label="Grant"/></TableRowColumn>
-                <TableRowColumn><RaisedButton onClick={this.handleRevoke} label="Revoke"/></TableRowColumn>
+                <TableRowColumn>
+                  <RaisedButton
+                    onClick={this.handleGrant({
+                      sender: config.alice.pk_b64,
+                      receiver: config.bob.pk_b64,
+                      name: config.bob.name,
+                      filename: this.props.filename,
+                      rekey
+                    })}
+                    label="Grant"
+                  />
+                </TableRowColumn>
+                <TableRowColumn>
+                  <RaisedButton onClick={this.handleRevoke} label="Revoke"/>
+                </TableRowColumn>
               </TableRow>
             ))
           }
@@ -61,25 +77,25 @@ export default class UserList extends Component {
     super(props);
     this.state = {
       selected_file_id: '',
-      recipients: {}
+      recipients: {},
+      files: []
     };
   }
+
 
   componentDidMount() {
     this.setState({
       selected_file_id: '',
+
       recipients: {
         'file_1.pdf': [{
           name: 'Bob',
-          public_key: keypair().public
+          public_key: config.bob.pk_b64
         }],
-        'file_2.pdf': [{
-          name: 'Charles',
-          public_key: keypair().public
-        },
+        'file_2.pdf': [
           {
             name: 'Bob',
-            public_key: keypair().public
+            public_key: config.bob.pk_b64
           }]
       }
     });
@@ -94,6 +110,7 @@ export default class UserList extends Component {
   render() {
     const recipients = _.get(this.state, 'recipients', {});
     const selected_file_id = _.get(this.state, 'selected_file_id', '');
+
     return (
       <div className="list-page">
         <div className="list">
@@ -111,7 +128,12 @@ export default class UserList extends Component {
         </div>
         <div className="recipients">
           {
-            recipients[selected_file_id] ? <RecipientList tableData={recipients[selected_file_id]} /> : null
+            recipients[selected_file_id] ?
+            <RecipientList
+              tableData={recipients[selected_file_id]}
+              fileName={selected_file_id}
+            /> :
+            null
           }
         </div>
       </div>

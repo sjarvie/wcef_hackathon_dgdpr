@@ -19,11 +19,13 @@ module.exports = {
   base_url: 'http://edwards-mbp:8000',
 
   alice: {
+    name: 'Alice',
     sk_b64: 'AAqL68MxgQa7uJKlnU83x9HMmL1NNb0T2bmE6taOiUjg',
     pk_b64: 'AQJiqjz5ouD7f69gqsD2bIpdaPvjBsnT8L9+XOd3K+r2JQ=='
   },
 
   bob: {
+    name: 'Bob',
     sk_b64: 'AAMwJ6zxIJEzD8K/+yq1M4vwtg1bYBtNyLbVJJ0ya7TH',
     pk_b64: 'AQJrHHtkyFEh+S0m3pP39khxZ024+W/RX3E0Ussts2qTwA=='
   }
