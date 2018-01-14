@@ -4,6 +4,7 @@ import tornado.web
 from handlers.nucypher_test_handler import NucypherTestHandler
 
 from handlers.s3_handler import S3Handler
+from handlers.upload_handler import UploadHandler
 
 
 class HelloWorldHandler(tornado.web.RequestHandler):
@@ -17,6 +18,7 @@ def make_app():
         (r"/hello_world", HelloWorldHandler),
         (r"/nucypher_test_handler", NucypherTestHandler),
         (r"/s3_handler/([a-z_.]*)", S3Handler),
+        (r"/upload/", UploadHandler),
     ])
 
 if __name__ == "__main__":
