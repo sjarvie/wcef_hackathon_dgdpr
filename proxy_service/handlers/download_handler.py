@@ -59,6 +59,7 @@ class DownloadHandler(tornado.web.RequestHandler):
 
         # next, fetch re_key
         receiver_metadata = self.keys[sender_b64][fname][receiver_b64]
+        print(receiver_metadata)
         rekey = decode_base64_str_into_bytes(receiver_metadata['rekey'])
 
         e_b_b64 = receiver_metadata['encryptedEphemeralKey']

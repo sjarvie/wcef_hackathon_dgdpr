@@ -22,6 +22,11 @@ def decode_base64_str_into_bytes(s):
 
 class UploadHandler(tornado.web.RequestHandler):
 
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
     def post(self):
         """
         {
@@ -34,9 +39,6 @@ class UploadHandler(tornado.web.RequestHandler):
         """
         args = json.loads(self.request.body)
         print('uploading file')
-
-        # test an object can be created
-        print('Got args {}'.format(args))
 
         fname = args['filename']
         c_b64 = args['ciphertext']

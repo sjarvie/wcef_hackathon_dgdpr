@@ -22,6 +22,12 @@ BUCKET = 'wcef-2018-dgdp'
 
 class FilesHandler(tornado.web.RequestHandler):
 
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
+
     def get(self):
         """
         USAGE: GET /files?sender=<sender public key>
@@ -42,12 +48,15 @@ class FilesHandler(tornado.web.RequestHandler):
                 }
 
         bucket = CONN.get_bucket(BUCKET)
-        bucket_keys = bucket.list(sender_b64 + "/", delimiter="/")
+        bucket_keys = list(bucket.get_all_keys())
+        # bucket_keys = bucket.list(prefix=sender + "/", delimiter="/")
         transformed_keys = set()
         for key in bucket_keys:
-            prefix_striped = key.name[(len(sender_b64) + 1):]
-            prefix_postfix_striped = prefix_striped[:prefix_striped.rfind("/")]
-            transformed_keys.add(prefix_postfix_striped)
+            if key.name.find(sender_b64):
+                prefix_striped = key.name[(len(sender_b64) + 1):]
+                prefix_postfix_striped = prefix_striped[:prefix_striped.rfind("/")]
+                if len(prefix_postfix_striped) > 0:
+                    transformed_keys.add(prefix_postfix_striped)
         response = {
                 "files": list(transformed_keys)
                 }
