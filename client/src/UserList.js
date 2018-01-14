@@ -15,34 +15,45 @@ import {
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 
-function RecipientList({tableData}) {
-  return (
-    <Table multiSelectable={false}>
-      <TableHeader
-        displaySelectAll={false}
-        adjustForCheckbox={false}
-      >
-        <TableRow>
-          <TableRowColumn>Recipient Name</TableRowColumn>
-          <TableRowColumn>Recipient Public Key</TableRowColumn>
-          <TableRowColumn className="grant-revoke"></TableRowColumn>
-          <TableRowColumn className="grant-revoke"></TableRowColumn>
-        </TableRow>
-      </TableHeader>
-      <TableBody displayRowCheckbox={false}>
-        {
-          tableData.map((row, index) => (
-            <TableRow key={index}>
-              <TableRowColumn>{row.name}</TableRowColumn>
-              <TableRowColumn>{row.public_key}</TableRowColumn>
-              <TableRowColumn><RaisedButton label="Grant"/></TableRowColumn>
-              <TableRowColumn><RaisedButton label="Revoke"/></TableRowColumn>
-            </TableRow>
-          ))
-        }
-      </TableBody>
-    </Table>
-  );
+export class RecipientList extends Component {
+  handleGrant({sender, filename}) {
+    () => {}
+  }
+
+  handleRevoke({sender, filename}) {
+    () => {}
+  }
+
+  render() {
+    const { tableData } = this.props;
+    return (
+      <Table multiSelectable={false}>
+        <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={false}
+        >
+          <TableRow>
+            <TableRowColumn>Recipient Name</TableRowColumn>
+            <TableRowColumn>Recipient Public Key</TableRowColumn>
+            <TableRowColumn></TableRowColumn>
+            <TableRowColumn></TableRowColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody displayRowCheckbox={false}>
+          {
+            tableData.map((row, index) => (
+              <TableRow key={index}>
+                <TableRowColumn>{row.name}</TableRowColumn>
+                <TableRowColumn>{row.public_key}</TableRowColumn>
+                <TableRowColumn><RaisedButton onClick={this.handleGrant} label="Grant"/></TableRowColumn>
+                <TableRowColumn><RaisedButton onClick={this.handleRevoke} label="Revoke"/></TableRowColumn>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    );
+  }
 }
 
 export default class UserList extends Component {
