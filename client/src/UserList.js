@@ -4,6 +4,8 @@ import Attachment from 'material-ui/svg-icons/file/attachment';
 import _ from 'lodash';
 import config from './config';
 import * as api from './api';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 import {
   Table,
@@ -15,67 +17,100 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 
 export class RecipientList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    }
+  }
+
   handleGrant({sender, receiver, name, filename, rekey, encryptedEphemeralKey}) {
     return () => {
-      return api.grant({sender, receiver, name, filename, rekey, encryptedEphemeralKey});
+      this.setState({
+        open: true
+      })
+      // return api.grant({sender, receiver, name, filename, rekey, encryptedEphemeralKey});
     }
   }
 
   handleRevoke({sender, receiver, filename}) {
     return () => {
+      console.log(...arguments);
       return api.revoke({sender, receiver, filename});
     }
   }
 
+  handleClose() {
+    this.setState({
+      open: false
+    })
+  }
+
   render() {
     const { tableData } = this.props;
+    const actions = [
+      <FlatButton
+        label="OK"
+        primary={true}
+        onClick={() => this.handleClose()}
+      />
+    ];
+
     return (
-      <Table multiSelectable={false}>
-        <TableHeader
-          displaySelectAll={false}
-          adjustForCheckbox={false}
-        >
-          <TableRow>
-            <TableRowColumn>Recipient Name</TableRowColumn>
-            <TableRowColumn>Recipient Public Key</TableRowColumn>
-            <TableRowColumn></TableRowColumn>
-            <TableRowColumn></TableRowColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>
-          {
-            tableData.map((row, index) => (
-              <TableRow key={index}>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.key}</TableRowColumn>
-                <TableRowColumn>
+      <div>
+        <Table multiSelectable={false}>
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={false}
+          >
+            <TableRow>
+              <TableRowColumn>Recipient Name</TableRowColumn>
+              <TableRowColumn>Recipient Public Key</TableRowColumn>
+              <TableRowColumn></TableRowColumn>
+              <TableRowColumn></TableRowColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {
+              tableData.map((row, index) => (
+                <TableRow key={index}>
+                  <TableRowColumn>{row.name}</TableRowColumn>
+                  <TableRowColumn>{row.key}</TableRowColumn>
+                  <TableRowColumn>
+                    <RaisedButton
+                      onClick={this.handleGrant({
+                        sender: config.alice.pk_b64,
+                        receiver: config.bob.pk_b64,
+                        name: config.bob.name,
+                        filename: this.props.filename,
+                        rekey: '',
+                        encryptedEphemeralKey: ''
+                      })}
+                      label="Grant"
+                    />
+                  </TableRowColumn>
                   <RaisedButton
-                    onClick={this.handleGrant({
+                    onClick={this.handleRevoke({
                       sender: config.alice.pk_b64,
                       receiver: config.bob.pk_b64,
-                      name: config.bob.name,
-                      filename: this.props.filename,
-                      rekey: '',
-                      encryptedEphemeralKey: ''
+                      filename: this.props.filename
                     })}
-                    label="Grant"
+                    label="Revoke"
+                    style={{marginTop: 6}}
                   />
-                </TableRowColumn>
-                <RaisedButton
-                  onClick={this.handleRevoke({
-                    sender: config.alice.pk_b64,
-                    receiver: config.bob.pk_b64,
-                    filename: this.props.filename
-                  })}
-                  secondary={true}
-                  label="Revoke"
-                  style={{marginTop: 6}}
-                />
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
+                </TableRow>
+              ))
+            }
+          </TableBody>
+        </Table>
+        <Dialog
+          title="Access Granted"
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+        >
+        </Dialog>
+      </div>
     );
   }
 }
@@ -91,7 +126,10 @@ export default class UserList extends Component {
           key: config.bob.pk_b64
         }
       ],
-      files: []
+      files: [
+        'file_123.pdf',
+        'file_1234.pdf'
+      ]
     };
   }
 
@@ -101,7 +139,7 @@ export default class UserList extends Component {
       sender: config.alice.pk_b64
     }).then(response => {
       this.setState({
-        files: _.get(response, 'data.files')
+        // files: _.get(response, 'data.files')
       });
     });
   }
