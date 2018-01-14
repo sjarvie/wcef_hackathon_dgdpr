@@ -9,6 +9,8 @@ client/node_modules
 # production
 /build
 
+proxy_service/env
+
 # misc
 .DS_Store
 .env.local
