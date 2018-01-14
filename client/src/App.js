@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import './App.css';
 import UserList from './UserList'
+import Download from './Download'
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
+import Button from 'material-ui/RaisedButton';
+import {download} from "./api";
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      page: null
+    }
   }
 
   render() {
@@ -15,9 +21,13 @@ class App extends Component {
         <AppBar
           title="dGDPR"
           iconElementRight={<Avatar label="alice">A</Avatar>}
-        />
+        >
+          <Button label="Receiver" style={{left: 0}} onClick={() => this.setState({page: 'download'})}/>
+        </AppBar>
         <div className="page">
-          <UserList />
+          {
+            !this.state.page ? <UserList /> : <Download/>
+          }
         </div>
       </div>
     );
