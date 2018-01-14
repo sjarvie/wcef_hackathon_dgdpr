@@ -118,6 +118,19 @@ resp = requests.post(
     data=json.dumps(payload)
 )
 
+# GET FILES
+
+
+# get files should have an entry for Bob 
+resp = requests.get(
+    '{}/files'.format(base_url),
+    params = {
+        'sender': pk_a_b64
+    }
+)
+print('got files')
+print(resp.text)
+
 
 
 # shares should now have an entry for Bob 
@@ -158,7 +171,7 @@ emphermeral_key_b = pre.decrypt(sk_b, e_b)
 dek_b = pre.decrypt(emphermeral_key_b, edek_b)
 msg_b = pyaes.AESModeOfOperationCTR(dek_b).decrypt(c_b)
 
-ipdb.set_trace()
+print('Messages equal? {}'.format(data == msg_b))
 
 
 
